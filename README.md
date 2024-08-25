@@ -2,7 +2,7 @@
 
 ## Requirements 
 
-If you want to run the run the project locally. You need to have the following packages installed in your system
+If you want to run the project locally. You need to have the following packages installed in your system
 | Package      |
 |--------------|
 | Composer     |
@@ -43,4 +43,4 @@ feature/PTF-users-subscriptions
 
 ### Pull requests
 
-Please make sure that you have created pull request for your feature. Don't commit directly into master/develop branches.
+Please make sure that you have created pull request for your feature. Don't commit directly into master/develop branch.
