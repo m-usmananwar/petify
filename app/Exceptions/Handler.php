@@ -55,7 +55,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if(strpos(get_class($exception), 'Illuminate\Database') === 0) {
-            return parent::render($request, new \Exception('Databae error, please try later'));
+            return parent::render($request, new \Exception('Database error, please try later'));
         }
         return parent::render($request, $exception);
     }
@@ -63,9 +63,9 @@ class Handler extends ExceptionHandler
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         if($request->expectsJson()) {
-            return ApiResponse::rawResponse('User is not logged in. Please redirect user to login screen and send token with further requests.', 401);
+            return ApiResponse::rawResponse(['message' => 'User is not logged in. Please redirect user to login screen and send token with further requests.'], 401);
         }
 
-        return redirect()->guset('login');
+        return redirect()->guest('login');
     }
 }
