@@ -2,24 +2,31 @@
 
 namespace App\Modules\PaymentModule\Helpers;
 
-use Stripe\Balance;
-use Stripe\PaymentIntent;
 use Stripe\Price;
+use Stripe\Balance;
 use Stripe\Product;
 use Stripe\StripeClient;
 use Stripe\Subscription;
+use Stripe\PaymentIntent;
+use App\Helpers\CurrencyConvertor;
 
 class StripeHelper
 {
-    private StripeClient $stripe;
+    private static ?StripeClient $stripe = null;
 
-    public function __construct()
+    public static function getClient(): StripeClient
     {
-        $this->stripe = new StripeClient('cashier.secret');
+        if(self::$stripe == null) {
+            self::$stripe = new StripeClient(config('cashier.secret'));
+        }
+
+        return self::$stripe;
     }
 
-    public function createIntent(int $amount, array $description = null): PaymentIntent
+    public static function createIntent(int $amount, array $description = null): PaymentIntent
     {
+        $client = self::getClient();
+
         $data = [
             'amount' => $amount,
             'currency' => 'usd',
@@ -28,50 +35,63 @@ class StripeHelper
 
         if($description) $data['description'] = $description;
 
-        return $this->stripe->paymentIntents->create($data);
+        return $client->paymentIntents->create($data);
     }
 
-    public function checkout(int $amount, string $paymentMethodId): PaymentIntent
+    public static function checkout(int $amount, string $paymentMethodId): PaymentIntent
     {
-        $intent = $this->createIntent($amount);
+        $client = self::getClient();
 
-        return $this->stripe->paymentIntents->confirm(
+        $intent = self::createIntent($amount);
+
+        return $client->paymentIntents->confirm(
             $intent->id,
             ['payment_method' => $paymentMethodId]
         );
     }
 
-    public function createStripeProduct($name): Product
+    public static function createStripeProduct($name): Product
     {
-        return $this->stripe->products->create([
+        $client = self::getClient();
+
+        return $client->products->create([
             'name' => $name,
         ]);
     }
 
-    public function createStripeProductPrice(array $data): Price
+    public static function createStripeProductPrice(array $data): Price
     {
-        $stripeProduct = $this->createStripeProduct($data['name']);
+        $client = self::getClient();
 
-        return $this->stripe->prices->create([
-            'unit_amount' => $data['amount'],
-            'recurring' => ['interval' => $data['intervale'], 'interval_count' => 1],
+        $stripeProduct = self::createStripeProduct($data['name']);
+
+        return $client->prices->create([
+            'unit_amount' => CurrencyConvertor::usdToCents($data['amount']),
+            'currency' => 'usd',
+            'recurring' => ['interval' => $data['interval'], 'interval_count' => 1],
             'nickname' => $data['name'],
             'product' => $stripeProduct->id,
         ]);
     }
 
-    public function retrieveSubscription(int $subscriptionId): Subscription
+    public static function retrieveSubscription(int $subscriptionId): Subscription
     {
-        return $this->stripe->subscriptions->retrieve($subscriptionId, []);
+        $client = self::getClient();
+
+        return $client->subscriptions->retrieve($subscriptionId, []);
     }
 
-    public function updateSubscription(int $subscriptionId, array $options = []):Subscription
+    public static function updateSubscription(int $subscriptionId, array $options = []):Subscription
     {
-        return $this->stripe->subscriptions->update($subscriptionId, $options);
+        $client = self::getClient();
+
+        return $client->subscriptions->update($subscriptionId, $options);
     }
 
-    public function retrieveStripeBalance(): Balance
+    public static function retrieveStripeBalance(): Balance
     {
-        return $this->stripe->balance->retrieve();
+        $client = self::getClient();
+        
+        return $client->balance->retrieve();
     }
 }

@@ -17,6 +17,10 @@ class User extends Authenticatable
         Notifiable,
         UserRelation;
 
+    const STATUS_ACTIVE = 'active';
+    const STATUS_INACTIVE = 'inactive';
+    const STATUS_BLOCKED = 'blocked';
+
     protected $fillable = [
         'first_name',
         'last_name',
@@ -27,7 +31,6 @@ class User extends Authenticatable
         'password',
         'email_verified_at',
         'status',
-        'level',
     ];
 
     protected $hidden = [
