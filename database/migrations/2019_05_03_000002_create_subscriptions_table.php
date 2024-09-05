@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
+            $table->unsignedBigInteger('subscription_plan_id')->nullable();
             $table->string('name');
             $table->string('stripe_id')->unique();
             $table->string('stripe_status');

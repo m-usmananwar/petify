@@ -6,7 +6,7 @@ use Illuminate\Http\JsonResponse;
 
 class ApiResponse extends JsonResponse
 {
-    public static function sucess(mixed $data = null, int $status = 200): ApiResponse
+    public static function success(mixed $data = null, int $status = 200): ApiResponse
     {
         return self::rawResponse($data, $status);
     }
