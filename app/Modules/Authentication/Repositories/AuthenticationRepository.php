@@ -2,7 +2,7 @@
 
 namespace App\Modules\Authentication\Repositories;
 
-use App\Models\User\User;
+use App\Models\User;
 use App\Modules\Authentication\Repositories\Interfaces\IAuthenticationRepository;
 use App\Repositories\BaseRepository;
 

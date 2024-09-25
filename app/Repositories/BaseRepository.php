@@ -25,6 +25,11 @@ abstract class BaseRepository
         return $this->model::where($condition)->get();
     }
 
+    public function findOneBy(array $condition = []):Model
+    {
+        return $this->model::where($condition)->first();
+    }
+
     public function get(int $id):Model
     {
         return $this->model::find($id);

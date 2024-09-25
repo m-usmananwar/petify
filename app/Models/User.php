@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Traits\User\UserRelation;
 use Illuminate\Notifications\Notifiable;
@@ -40,4 +41,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function($model) {
+            $model->password = Hash::make($model->password);
+        });
+    }
 }
