@@ -18,7 +18,7 @@ class AuthenticationController extends Controller
     
     public function signInAction(SignInRequest $request): ApiResponse
     {
-        $user = $this->service->signIn($request->all());
+        $user = $this->service->signIn($request->toDto());
         $userResource = new UserResource($user);
 
         return ApiResponse::success(array_merge($userResource->toArray($request), [
@@ -28,7 +28,7 @@ class AuthenticationController extends Controller
 
     public function registerAction(RegistrationRequest $request): ApiResponse
     {
-        $user = $this->service->register($request->all());
+        $user = $this->service->register($request->toDto());
         $userResource = new UserResource($user);
         
         return ApiResponse::success(array_merge($userResource->toArray($request), [

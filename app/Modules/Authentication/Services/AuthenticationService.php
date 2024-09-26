@@ -3,6 +3,8 @@
 namespace App\Modules\Authentication\Services;
 
 use App\Models\User;
+use App\Modules\Authentication\DTO\RegistrationDTO;
+use App\Modules\Authentication\DTO\SignInDTO;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -17,9 +19,9 @@ class AuthenticationService
         
     }
 
-    public function signIn(array $data): User
+    public function signIn(SignInDTO $dto): User
     {
-        $user = $this->repository->findOneBy(['email' => $data['email']]);
+        $user = $this->repository->findOneBy(['email' => $dto->email]);
 
         if(!$user) {
             throw new NotFoundHttpException('User not found against this email address');
@@ -29,15 +31,16 @@ class AuthenticationService
             throw new AccessDeniedHttpException('Email address not verified');
         }
 
-        if(!Hash::check($data['password'], $user->password)) {
+        if(!Hash::check($dto->password, $user->password)) {
             throw new UnauthorizedHttpException('', 'Invalid credentials');
         }
 
         return $user;
     }
 
-    public function register(array $data): User
+    public function register(RegistrationDTO $dto): User
     {
+        $data = [$dto];
         $user = $this->repository->save($data);
         
         return $user;

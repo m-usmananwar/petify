@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\DTO\BaseDTO;
 use Illuminate\Support\Arr;
+use Webmozart\Assert\Assert;
 use App\Http\Response\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
@@ -29,5 +31,14 @@ abstract class BaseRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge(request()->route()->parameters());
+    }
+
+    public function toDto():BaseDTO
+    {
+        $dto = $this->DTO();
+
+        Assert::subclassOf($dto, BaseDTO::class);
+
+        return new $dto(...$this->validated());
     }
 }
