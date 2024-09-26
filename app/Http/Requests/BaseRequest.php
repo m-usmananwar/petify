@@ -12,6 +12,9 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 abstract class BaseRequest extends FormRequest
 {
+
+    public abstract function DTO():string;
+    
     public function authorize()
     {
         return true;

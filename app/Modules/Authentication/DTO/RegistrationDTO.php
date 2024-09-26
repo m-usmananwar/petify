@@ -3,16 +3,17 @@
 namespace App\Modules\Authentication\DTO;
 
 use App\DTO\BaseDTO;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Illuminate\Http\UploadedFile;
 
 class RegistrationDTO extends BaseDTO
 {
     public function __construct(
-        public readonly string $first_name,
-        public readonly string $last_name,
-        public readonly string $username,
+        public readonly string $firstName,
+        public readonly string $lastName,
+        public readonly string $userName,
+        public readonly string $email,
         public readonly string $password,
-        public readonly string $contact_no,
+        public readonly string $contactNo,
         public readonly ?UploadedFile $image,
     )
     {

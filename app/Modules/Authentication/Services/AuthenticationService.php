@@ -2,6 +2,7 @@
 
 namespace App\Modules\Authentication\Services;
 
+use App\Helpers\FileHandler;
 use App\Models\User;
 use App\Modules\Authentication\DTO\RegistrationDTO;
 use App\Modules\Authentication\DTO\SignInDTO;
@@ -10,7 +11,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use App\Modules\Authentication\Repositories\Interfaces\IAuthenticationRepository;
-
+use Faker\Core\File;
 
 class AuthenticationService
 {
@@ -40,8 +41,21 @@ class AuthenticationService
 
     public function register(RegistrationDTO $dto): User
     {
-        $data = [$dto];
+        $data['first_name'] = $dto->firstName;
+        $data['last_name'] = $dto->lastName;
+        $data['username'] = $dto->userName;
+        $data['contact_no'] = $dto->contactNo;
+        $data['email'] = $dto->email;
+        $data['password'] = Hash::make($dto->password);
+
         $user = $this->repository->save($data);
+
+        $filePath = FileHandler::generateUserSpecificPath($user->id, config('general.filePaths.profileImages'));
+
+        $uploadedFilePath = FileHandler::uploadFile($dto->image, $filePath);
+
+        $user->image = $uploadedFilePath;
+        $user->save();
         
         return $user;
     }
