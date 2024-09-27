@@ -8,6 +8,7 @@ class BindingServiceProvider extends ServiceProvider
 {
     const BINDINGS = [
         \App\Modules\Authentication\Repositories\Interfaces\IAuthenticationRepository::class => \App\Modules\Authentication\Repositories\AuthenticationRepository::class,
+        \App\Modules\Authentication\Repositories\Interfaces\IVerificationRepository::class => \App\Modules\Authentication\Repositories\VerificationRepository::class,
     ];
 
     public function register()
