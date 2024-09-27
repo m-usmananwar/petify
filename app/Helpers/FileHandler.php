@@ -20,7 +20,7 @@ class FileHandler
         }
 
         if($fileName == null){
-            $fileName = time() . '.' . $uploadedFile->getClientOriginalName();
+            $fileName = time() . '-' . $uploadedFile->getClientOriginalName();
         }
 
         $filePath = $uploadedFile->storeAs($folder, $fileName, $disk);
