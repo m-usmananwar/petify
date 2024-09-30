@@ -50,6 +50,14 @@ abstract class BaseRepository
         return $this->model::create($data);
     }
 
+    public function update(array $data, int $id): Model
+    {
+        $model = $this->get($id);
+        $model->fill($data);
+        $model->save();
+        return $model;
+    }
+
     public function delete(int $id = null, array $condition = null):bool
     {
         if(null !== $condition) return $this->model::where($condition)->delete();

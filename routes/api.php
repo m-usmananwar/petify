@@ -19,7 +19,9 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/register', [\App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'registerAction']);
     Route::post('/verify-email', [\App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'emailVerificationAction']);
     Route::post('/resend-verification-email', [\App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'resendEmailVerificationAction']);
+    Route::post('/forgot-password',[ \App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'forgotPasswordAction']);
+    Route::post('/verify-forgot-password', [\App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'verifyForgotPasswordAction']);
 });
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum'])->group(function() {
+    Route::post('/reset-password',[ \App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'resetPasswordAction']);
 });
