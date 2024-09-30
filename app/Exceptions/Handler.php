@@ -2,8 +2,11 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use App\Http\Response\ApiResponse;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class Handler extends ExceptionHandler
 {
@@ -22,7 +25,6 @@ class Handler extends ExceptionHandler
      * @var array<int, string>
      */
     protected $dontFlash = [
-        'current_password',
         'password',
         'password_confirmation',
     ];
@@ -34,8 +36,36 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (Throwable $e) {
+            $message = $e->getMessage();
+
+            if ($e instanceof HttpExceptionInterface) {
+                return ApiResponse::rawResponse(["message" => $message], $e->getStatusCode());
+            }
+
+            return ApiResponse::rawResponse(["message" => $message], 500);
         });
+    }
+
+    public function report(Throwable $exception)
+    {
+        return parent::report($exception);
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        if(strpos(get_class($exception), 'Illuminate\Database') === 0) {
+            return parent::render($request, new \Exception('Database error, please try later'));
+        }
+        return parent::render($request, $exception);
+    }
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if($request->expectsJson()) {
+            return ApiResponse::rawResponse(['message' => 'User is not logged in. Please redirect user to login screen and send token with further requests.'], 401);
+        }
+
+        return redirect()->guest('login');
     }
 }
