@@ -3,9 +3,8 @@
 namespace App\Modules\Authentication\Services;
 
 use App\Models\User;
-use Faker\Core\File;
 use App\Helpers\FileHandler;
-use PhpParser\Node\Stmt\Nop;
+use InvalidArgumentException;
 use Illuminate\Support\Facades\Hash;
 use App\Modules\Authentication\DTO\SignInDTO;
 use App\Modules\Authentication\DTO\RegistrationDTO;
@@ -196,6 +195,10 @@ class AuthenticationService
 
         if(!Hash::check($dto->currentPassword, $user->password)) {
             throw new UnauthorizedHttpException('', 'Invalid current password');
+        }
+
+        if (Hash::check($dto->newPassword, $user->password)) {
+            throw new InvalidArgumentException('You cannot use the same password as the new password');
         }
 
         $user->password = Hash::make($dto->newPassword);
