@@ -2,10 +2,13 @@
 
 namespace App\Modules\Authentication\Listeners;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
 
-class OTPVerificationEventListener
+class OTPVerificationEventListener implements ShouldQueue
 {
+    use Queueable;
     /**
      * Create the event listener.
      *

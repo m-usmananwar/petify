@@ -2,12 +2,15 @@
 
 namespace App\Modules\Authentication\Listeners;
 
+use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
 
-class WelcomeEventListener
+class WelcomeEventListener implements ShouldQueue
 {
+    use Queueable;
+    
     /**
      * Create the event listener.
      *
