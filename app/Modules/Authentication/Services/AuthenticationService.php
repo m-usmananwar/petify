@@ -4,6 +4,7 @@ namespace App\Modules\Authentication\Services;
 
 use App\Models\User;
 use App\Helpers\FileHandler;
+use App\Enum\VerificationEnum;
 use App\Traits\GenericExceptions;
 use Illuminate\Support\Facades\Hash;
 use App\Modules\Authentication\DTO\SignInDTO;
@@ -71,6 +72,8 @@ class AuthenticationService
         
         $verificationId = $user->resetEmailVerification();
 
+        \App\Modules\Authentication\Events\WelcomeEvent::dispatch($user, $user->getVerificationCode());
+
         return $verificationId;
     }
 
@@ -115,6 +118,8 @@ class AuthenticationService
 
         $verificationId = $user->resetEmailVerification();
 
+        \App\Modules\Authentication\Events\OTPVerificationEvent::dispatch($user, $user->getVerificationCode(), VerificationEnum::EMAIL);
+
         return $verificationId;
     }
 
@@ -131,6 +136,8 @@ class AuthenticationService
         }
 
         $verificationId = $user->resetPasswordVerification();
+
+        \App\Modules\Authentication\Events\OTPVerificationEvent::dispatch($user, $user->getPasswordResetCode(), VerificationEnum::PASSWORD);
 
         return $verificationId;
     }
