@@ -22,4 +22,15 @@ class SubscriptionController extends Controller
             throw $exception;
         }
     }
+
+    public function cancelSubscriptionAction(): ApiResponse
+    {
+        try {
+            $this->service->cancelSubscription();
+
+            return ApiResponse::success(['message' => 'Subscription cancelled successfully.']);
+        } catch (Exception $exception) {
+            throw $exception;
+        }
+    }
 }

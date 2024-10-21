@@ -1,4 +1,3 @@
-PaymentGatewayEnum
 <?php
 
 namespace App\Enum;

@@ -11,13 +11,21 @@ use App\Modules\Subscription\Repositories\Interfaces\ISubscriptionPlanRepository
 class SubscriptionService
 {
 
-    public function __construct(private readonly ISubscriptionRepository $repository, private readonly ISubscriptionPlanRepository $planRepository)
-    {
-        
-    }
+    public function __construct(private readonly ISubscriptionRepository $repository, private readonly ISubscriptionPlanRepository $planRepository) {}
 
     public function buySubscription(BuySubscriptionDTO $dto)
     {
         $paymentHandler = PaymentGatewayFactory::paymentHandler(PaymentGatewayEnum::STRIPE->value);
+
+        $subscription = $paymentHandler->buySubscription($dto->subscriptionPlanId, $dto->paymentMethodId);
+
+        return $subscription;
+    }
+
+    public function cancelSubscription()
+    {
+        $paymentHandler = PaymentGatewayFactory::paymentHandler(PaymentGatewayEnum::STRIPE->value);
+
+        return $paymentHandler->cancelSubscription();
     }
 }

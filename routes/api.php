@@ -23,10 +23,11 @@ Route::middleware(['guest'])->group(function () {
         Route::post('/verify-forgot-password', 'verifyForgotPasswordAction');
     });
 });
-Route::middleware(['auth:sanctum'])->group(function() {
-    Route::post('/reset-password',[ \App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'resetPasswordAction']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/reset-password', [\App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'resetPasswordAction']);
 
     Route::controller(\App\Http\Controllers\Api\Subscription\SubscriptionController::class)->prefix('subscription/')->group(function () {
         Route::post('buy', 'buySubscriptionAction');
+        Route::post('cancel', 'cancelSubscriptionAction');
     });
 });
