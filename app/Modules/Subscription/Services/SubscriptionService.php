@@ -1,5 +1,3 @@
-SubscriptionService
-
 <?php
 
 namespace App\Modules\Subscription\Services;
@@ -21,7 +19,5 @@ class SubscriptionService
     public function buySubscription(BuySubscriptionDTO $dto)
     {
         $paymentHandler = PaymentGatewayFactory::paymentHandler(PaymentGatewayEnum::STRIPE->value);
-
-        
     }
 }

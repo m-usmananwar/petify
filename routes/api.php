@@ -14,17 +14,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['guest'])->group(function () {
-    Route::post('/signin', [\App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'signInAction']);
-    Route::post('/register', [\App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'registerAction']);
-    Route::post('/verify-email', [\App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'emailVerificationAction']);
-    Route::post('/resend-verification-email', [\App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'resendEmailVerificationAction']);
-    Route::post('/forgot-password',[ \App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'forgotPasswordAction']);
-    Route::post('/verify-forgot-password', [\App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'verifyForgotPasswordAction']);
+    Route::controller(\App\Http\Controllers\Api\Authentication\AuthenticationController::class)->group(function () {
+        Route::post('/signin', 'signInAction');
+        Route::post('/register', 'registerAction');
+        Route::post('/verify-email', 'emailVerificationAction');
+        Route::post('/resend-verification-email', 'resendEmailVerificationAction');
+        Route::post('/forgot-password', 'forgotPasswordAction');
+        Route::post('/verify-forgot-password', 'verifyForgotPasswordAction');
+    });
 });
 Route::middleware(['auth:sanctum'])->group(function() {
     Route::post('/reset-password',[ \App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'resetPasswordAction']);
 
     Route::controller(\App\Http\Controllers\Api\Subscription\SubscriptionController::class)->prefix('subscription/')->group(function () {
-        Route::post('/buy', 'buySubscriptionAction');
+        Route::post('buy', 'buySubscriptionAction');
     });
 });

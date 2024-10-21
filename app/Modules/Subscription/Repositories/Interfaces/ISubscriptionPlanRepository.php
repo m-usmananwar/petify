@@ -1,4 +1,3 @@
-
 <?php
 namespace App\Modules\Subscription\Repositories\Interfaces;
 
