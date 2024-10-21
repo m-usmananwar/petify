@@ -57,12 +57,64 @@ class StripePaymentGateway implements IPaymentGateway
         $subscription = $user->newSubscription($this->subscriptionName, $plan->meta['stripe_price_id'])
             ->trialDays(config('cashier.subscriptionTrialDays'))
             ->add();
+
         return $subscription;
     }
 
-    public function changeSubscriptionPlan(string $stripePriceId, string $paymentMethodId): Subscription {}
+    public function changeSubscriptionPlan(string $subscriptionPlanId, string $paymentMethodId): Subscription
+    {
+        $user = currentUser();
 
-    public function changeSubscriptionPlanAndPaymentMethod(string $stripePriceId, string $paymentMethodId): Subscription {}
+        if (!$user->subscribed($this->subscriptionName)) {
+            throw new \Exception("It looks like you’re not currently subscribed to any plan");
+        }
+
+        $user->createOrGetStripeCustomer();
+        $user->addPaymentMethod($paymentMethodId);
+
+        $plan = $this->subscriptionPlanRepository->findOneBy(['id' => $subscriptionPlanId]);
+
+        if ($user->subscribedToPrice($plan->meta['stripe_price_id'], $this->subscriptionName)) {
+            throw new \Exception("It looks like you’re already subscribed to this plan");
+        }
+
+        $user->subscription($this->subscriptionName)
+            ->fill(['quantity' => 1])->save();
+
+        $subscription = $user->subscription($this->subscriptionName)->swap($plan->meta['stripe_price_id']);
+
+        $subscription->fill('subscription_plan_id', $plan->id)->save();
+
+        return $subscription;
+    }
+
+    public function changeSubscriptionPlanAndPaymentMethod(string $subscriptionPlanId, string $paymentMethodId): Subscription
+    {
+        $user = currentUser();
+
+        $user->createOrGetStripeCustomer();
+        $user->addPaymentMethod($paymentMethodId);
+        $user->updateDefaultPaymentMethod($paymentMethodId);
+        
+        if (!$user->subscribed($this->subscriptionName)) {
+            throw new \Exception("It looks like you’re not currently subscribed to any plan");
+        }
+
+        $plan = $this->subscriptionPlanRepository->findOneBy(['id' => $subscriptionPlanId]);
+
+        if ($user->subscribedToPrice($plan->meta['stripe_price_id'], $this->subscriptionName)) {
+            throw new \Exception("It looks like you’re already subscribed to this plan");
+        }
+
+        $user->subscription($this->subscriptionName)
+            ->fill(['quantity' => 1])->save();
+
+        $subscription = $user->subscription($this->subscriptionName)->swap($plan->meta['stripe_price_id']);
+
+        $subscription->fill('subscription_plan_id', $plan->id)->save();
+
+        return $subscription;
+    }
 
     public function cancelSubscription(): Subscription
     {
@@ -79,5 +131,18 @@ class StripePaymentGateway implements IPaymentGateway
         return $user->subscription($this->subscriptionName)->cancel();
     }
 
-    public function resumeSubscription(): Subscription {}
+    public function resumeSubscription(): Subscription
+    {
+        $user = currentUser();
+
+        if (!$user->subscribed($this->subscriptionName)) {
+            throw new \Exception("It looks like you’re not currently subscribed to any plan");
+        }
+
+        if (!$user->subscription($this->subscriptionName)->onGracePeriod()) {
+            throw new \Exception("You’re not currently in a grace period. Resuming your subscription is only possible during this period.");
+        }
+
+        return $user->subscription($this->subscriptionName)->resume();
+    }
 }

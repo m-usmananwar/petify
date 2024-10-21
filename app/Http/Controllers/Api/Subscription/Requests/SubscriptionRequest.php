@@ -2,14 +2,14 @@
 namespace App\Http\Controllers\Api\Subscription\Requests;
 
 use App\Http\Requests\BaseRequest;
-use App\Modules\Subscription\DTO\BuySubscriptionDTO;
+use App\Modules\Subscription\DTO\SubscriptionDTO;
 
 
-class BuySubscriptionRequest extends BaseRequest
+class SubscriptionRequest extends BaseRequest
 {
     public function DTO(): string
     {
-        return BuySubscriptionDTO::class;
+        return SubscriptionDTO::class;
     }
     
     public function rules()

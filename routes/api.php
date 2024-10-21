@@ -28,6 +28,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::controller(\App\Http\Controllers\Api\Subscription\SubscriptionController::class)->prefix('subscription/')->group(function () {
         Route::post('buy', 'buySubscriptionAction');
+        Route::post('change-plan', 'changeSubscriptionPlanAction');
+        Route::post('change-plan-and-payment-method', 'changeSubscriptionPlanAndPaymentMethodAction');
+        Route::post('resume', 'resumeSubscriptionAction');
         Route::post('cancel', 'cancelSubscriptionAction');
     });
 });
