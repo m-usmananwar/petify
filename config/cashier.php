@@ -122,4 +122,7 @@ return [
 
     'logger' => env('CASHIER_LOGGER'),
 
+    'subscriptionName' => env('SUBSCRIPTION_NAME', 'Membership'),
+
+    'subscriptionTrialDays' => env('SUBSCRIPTION_TRIAL_DAYS', 07),
 ];

@@ -19,10 +19,6 @@ class User extends Authenticatable
         UserRelation,
         UserHelper;
 
-    const STATUS_ACTIVE = 'active';
-    const STATUS_INACTIVE = 'inactive';
-    const STATUS_BLOCKED = 'blocked';
-
     protected $fillable = [
         'first_name',
         'last_name',

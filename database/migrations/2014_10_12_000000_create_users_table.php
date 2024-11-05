@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Enum\StatusEnum;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('status')->default(User::STATUS_ACTIVE);
+            $table->string('status')->default(StatusEnum::ACTIVE->value);
             $table->timestamps();
         });
     }

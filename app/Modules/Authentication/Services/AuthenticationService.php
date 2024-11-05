@@ -4,25 +4,25 @@ namespace App\Modules\Authentication\Services;
 
 use App\Models\User;
 use App\Helpers\FileHandler;
-use InvalidArgumentException;
+use App\Enum\VerificationEnum;
+use App\Traits\GenericExceptions;
 use Illuminate\Support\Facades\Hash;
 use App\Modules\Authentication\DTO\SignInDTO;
 use App\Modules\Authentication\DTO\RegistrationDTO;
 use App\Modules\Authentication\DTO\ResetPasswordDTO;
 use App\Modules\Authentication\DTO\ForgotPasswordDTO;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Modules\Authentication\DTO\EmailVerificationDTO;
 use App\Modules\Authentication\DTO\PasswordVerificationDTO;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use App\Modules\Authentication\DTO\EmailVerificationUpdateDTO;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use App\Modules\Authentication\Repositories\Interfaces\IVerificationRepository;
 use App\Modules\Authentication\Repositories\Interfaces\IAuthenticationRepository;
 
 class AuthenticationService
 {
+    use GenericExceptions;
+
     public function __construct(
         private readonly IAuthenticationRepository $repository,
         private readonly IVerificationRepository $verificationRepository
@@ -36,15 +36,15 @@ class AuthenticationService
         $user = $this->repository->findOneBy(['email' => $dto->email]);
 
         if(!$user) {
-            throw new NotFoundHttpException('User not found against this email address');
+            $this->throwNotFoundException('User not found against this email address');
         }
 
         if(!$user->email_verified_at) {
-            throw new AccessDeniedHttpException('Email address not verified');
+            $this->throwAccessDeniedException('Email address not verified');
         }
 
         if(!Hash::check($dto->password, $user->password)) {
-            throw new UnauthorizedHttpException('', 'Invalid credentials');
+            $this->throwUnauthorizedException('Invalid credentials');
         }
 
         return $user;
@@ -68,7 +68,11 @@ class AuthenticationService
         $user->image = $uploadedFilePath;
         $user->save();
         
+        $user->createAsStripeCustomer();
+        
         $verificationId = $user->resetEmailVerification();
+
+        \App\Modules\Authentication\Events\WelcomeEvent::dispatch($user, $user->getVerificationCode());
 
         return $verificationId;
     }
@@ -78,35 +82,23 @@ class AuthenticationService
         $verification = $this->verificationRepository->findOneBy(['unique_id' => $dto->verificationId, 'type' => $dto->type]);
 
         if(!$verification) {
-            throw new NotFoundHttpException('Verification not found');
+            $this->throwNotFoundException('Verification not found');
         }
 
         $user = $this->repository->findOneBy(['id' => $verification->user_id]);
 
         if($user->isVerified()) {
-            throw new AccessDeniedHttpException('User already verified');
+            $this->throwAccessDeniedException('User already verified');
         }
 
         $userVerification = $user->verifyEmail($dto->verificationCode);     
 
         if(!$userVerification) {
-            throw new HttpResponseException(
-                response()->json([
-                    'message' => "Invalid verification code.",
-                ], 422)
-            );
+            $this->throwUnauthorizedException('Invalid verification code', 422);
         } else if($userVerification === 'expired') {
-            throw new HttpResponseException(
-                response()->json([
-                    'message' => "Verification code has expired. Please send the verification email again.",
-                ], 422)
-            );
+            $this->throwUnauthorizedException('Verification code has expired. Please send the verification email again.', 422);
         } else if($userVerification === 'failed_attempts') {
-            throw new HttpResponseException(
-                response()->json([
-                    'message' => "Too many failed attempts. Please send the verification email again.",
-                ], 422)
-            );
+            $this->throwUnauthorizedException('Too many failed attempts. Please send the verification email again', 422);
         }
         
         return $user;
@@ -126,6 +118,8 @@ class AuthenticationService
 
         $verificationId = $user->resetEmailVerification();
 
+        \App\Modules\Authentication\Events\OTPVerificationEvent::dispatch($user, $user->getVerificationCode(), VerificationEnum::EMAIL);
+
         return $verificationId;
     }
 
@@ -134,14 +128,16 @@ class AuthenticationService
         $user = $this->repository->findOneBy(['email' => $dto->email]);
 
         if(!$user) {
-            throw new NotFoundHttpException('User not found against this email address');
+            $this->throwNotFoundException('User not found against this email address');
         }
 
         if(!$user->isVerified()) {
-            throw new AccessDeniedException('Email address not verified');
+            $this->throwAccessDeniedException('Email address not verified');
         }
 
         $verificationId = $user->resetPasswordVerification();
+
+        \App\Modules\Authentication\Events\OTPVerificationEvent::dispatch($user, $user->getPasswordResetCode(), VerificationEnum::PASSWORD);
 
         return $verificationId;
     }
@@ -151,7 +147,7 @@ class AuthenticationService
         $verification = $this->verificationRepository->findOneBy(['unique_id' => $dto->verificationId, 'type' => $dto->type]);
 
         if(!$verification) {
-            throw new NotFoundHttpException('Verification not found');
+            $this->throwNotFoundException('Verification not found');
         }
 
         $user = $this->repository->findOneBy(['id' => $verification->user_id]);
@@ -159,23 +155,11 @@ class AuthenticationService
         $userVerification = $user->verifyPassword($dto->verificationCode);
 
         if(!$userVerification) {
-            throw new HttpResponseException(
-                response()->json([
-                    'message' => "Invalid verification code.",
-                ], 422)
-            );
+            $this->throwUnauthorizedException('Invalid verification code', 422);
         } else if($userVerification === 'expired') {
-            throw new HttpResponseException(
-                response()->json([
-                    'message' => "Verification code has expired. Please send the forgot password email again.",
-                ], 422)
-            );
+            $this->throwUnauthorizedException('Verification code has expired. Please send the verification email again.', 422);
         } else if($userVerification === 'failed_attempts') {
-            throw new HttpResponseException(
-                response()->json([
-                    'message' => "Too many failed attempts. Please send the forgot password email again.",
-                ], 422)
-            );
+            $this->throwUnauthorizedException('Too many failed attempts. Please send the verification email again', 422);
         }
 
         return $user;
@@ -186,19 +170,19 @@ class AuthenticationService
         $user = $this->repository->findOneBy(['email' => $dto->email]);
 
         if(!$user) {
-            throw new NotFoundHttpException('User not found against this email address');
+            $this->throwNotFoundException('User not found against this email address');
         }
 
         if(!$user->isVerified()) {
-            throw new AccessDeniedException('Email address not verified');
+            $this->throwAccessDeniedException('Email address not verified');
         }
 
         if(!Hash::check($dto->currentPassword, $user->password)) {
-            throw new UnauthorizedHttpException('', 'Invalid current password');
+            $this->throwUnauthorizedException('Invalid current password');
         }
 
         if (Hash::check($dto->newPassword, $user->password)) {
-            throw new InvalidArgumentException('You cannot use the same password as the new password');
+            $this->throwInvalidArgumentException('You cannot use the same password as the current password');
         }
 
         $user->password = Hash::make($dto->newPassword);

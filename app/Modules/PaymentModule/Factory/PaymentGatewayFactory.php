@@ -2,15 +2,14 @@
 
 namespace App\Modules\PaymentModule\Factory;
 
+use App\Enum\PaymentGatewayEnum;
 use Illuminate\Support\Facades\App;
 use App\Modules\PaymentModule\Factory\PaymentGateways\StripePaymentGateway;
 
 class PaymentGatewayFactory
 {
-    const STRIPE_GATEWAY = 'stripe';
-
     private static array  $paymentGatewayMap =  [
-        self::STRIPE_GATEWAY => StripePaymentGateway::class,
+        PaymentGatewayEnum::STRIPE->value => StripePaymentGateway::class,
     ];
 
 
