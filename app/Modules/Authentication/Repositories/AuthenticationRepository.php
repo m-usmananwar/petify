@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Modules\Authentication\Repositories\Interfaces\IAuthenticationRepository;
 use App\Repositories\BaseRepository;
 
-class AuthenticationRepository extends BaseRepository implements IAuthenticationRepository
+final class AuthenticationRepository extends BaseRepository implements IAuthenticationRepository
 {
     public function __construct(User $model)
     {

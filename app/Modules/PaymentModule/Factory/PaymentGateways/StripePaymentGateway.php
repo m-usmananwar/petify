@@ -8,7 +8,7 @@ use App\Modules\PaymentModule\Factory\PaymentGateways\IPaymentGateway;
 use App\Modules\Subscription\Repositories\Interfaces\ISubscriptionPlanRepository;
 use Exception;
 
-class StripePaymentGateway implements IPaymentGateway
+final class StripePaymentGateway implements IPaymentGateway
 {
     public function __construct(
         private readonly ISubscriptionPlanRepository $subscriptionPlanRepository,

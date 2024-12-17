@@ -8,7 +8,7 @@ use App\Modules\PaymentModule\Factory\PaymentGatewayFactory;
 use App\Modules\Subscription\Repositories\Interfaces\ISubscriptionRepository;
 use App\Modules\Subscription\Repositories\Interfaces\ISubscriptionPlanRepository;
 
-class SubscriptionService
+final class SubscriptionService
 {
 
     public function __construct(private readonly ISubscriptionRepository $repository, private readonly ISubscriptionPlanRepository $planRepository) {}

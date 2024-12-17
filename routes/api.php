@@ -33,4 +33,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('resume', 'resumeSubscriptionAction');
         Route::post('cancel', 'cancelSubscriptionAction');
     });
+
+    Route::apiResource('auction', \App\Http\Controllers\Api\V1\Auction\AuctionController::class);
 });

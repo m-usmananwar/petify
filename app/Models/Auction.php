@@ -7,6 +7,7 @@ use App\Models\Interfaces\ICouldBiddable;
 use App\Models\Interfaces\ICouldMediaable;
 use App\Models\Traits\Global\ShouldBiddable;
 use App\Models\Traits\Auction\AuctionRelation;
+use App\Models\Traits\Auction\AuctionScope;
 use App\Models\Traits\Global\ShouldMediaable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -14,6 +15,7 @@ class Auction extends Model implements ICouldBiddable, ICouldMediaable
 {
     use HasFactory,
         AuctionRelation,
+        AuctionScope,
         ShouldBiddable,
         ShouldMediaable;
 
