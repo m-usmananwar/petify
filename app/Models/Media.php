@@ -11,9 +11,6 @@ class Media extends Model
     use HasFactory,
         MediaRelation;
 
-    const STATUS_ACTIVE = 1;
-    const STATUS_INACTIVE = 0;
-
     protected $fillable = [
         'mediaable_id',
         'mediaable_type',
