@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['guest'])->group(function () {
-    Route::controller(\App\Http\Controllers\Api\Authentication\AuthenticationController::class)->group(function () {
+    Route::controller(\App\Http\Controllers\Api\V1\Authentication\AuthenticationController::class)->group(function () {
         Route::post('/signin', 'signInAction');
         Route::post('/register', 'registerAction');
         Route::post('/verify-email', 'emailVerificationAction');
@@ -24,9 +24,9 @@ Route::middleware(['guest'])->group(function () {
     });
 });
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post('/reset-password', [\App\Http\Controllers\Api\Authentication\AuthenticationController::class, 'resetPasswordAction']);
+    Route::post('/reset-password', [\App\Http\Controllers\Api\V1\Authentication\AuthenticationController::class, 'resetPasswordAction']);
 
-    Route::controller(\App\Http\Controllers\Api\Subscription\SubscriptionController::class)->prefix('subscription/')->group(function () {
+    Route::controller(\App\Http\Controllers\Api\V1\Subscription\SubscriptionController::class)->prefix('subscription/')->group(function () {
         Route::post('buy', 'buySubscriptionAction');
         Route::post('change-plan', 'changeSubscriptionPlanAction');
         Route::post('change-plan-and-payment-method', 'changeSubscriptionPlanAndPaymentMethodAction');
