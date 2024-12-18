@@ -2,27 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1\Auction\Requests;
 
+use App\Enum\GlobalEnum;
 use Illuminate\Validation\Rule;
 use App\Http\Requests\BaseRequest;
 use App\Modules\Auction\DTO\CreateAuctionDTO;
 
 class CreateAuctionRequest extends BaseRequest
 {
-    protected static array $types = [
-        'Animal',
-        'Bird',
-        'Reptile',
-        'Amphibian',
-        'Fish',
-        'Insect',
-        'Mammal',
-        'Plant',
-        'Fungi',
-        'Microorganism',
-        'Arthropod',
-        'Mollusk',
-        'Crustacean'
-    ];
+
 
     public function DTO(): string
     {
@@ -42,7 +29,7 @@ class CreateAuctionRequest extends BaseRequest
             'startTime' => ['bail', 'required', 'date_format:Y-m-d H:i:s'],
             'expiryTime' => ['bail', 'required', 'date_format:Y-m-d H:i:s'],
             'medias' => ['bail', 'required', 'array'],
-            'medias.*' => ['bail', 'required', 'file', 'mimes:jpeg,png,jpg'],
+            'medias.*' => ['bail', 'required', 'file', 'mimes:jpeg,png,jpg,webp'],
         ];
     }
 
@@ -52,7 +39,7 @@ class CreateAuctionRequest extends BaseRequest
             'bail',
             'required',
             'string',
-            Rule::in(self::$types),
+            Rule::in(GlobalEnum::$auctionableTypes),
         ];
     }
 }

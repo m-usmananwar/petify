@@ -11,6 +11,8 @@ class Media extends Model
     use HasFactory,
         MediaRelation;
 
+    protected $table = 'medias';
+
     protected $fillable = [
         'mediaable_id',
         'mediaable_type',

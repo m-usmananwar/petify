@@ -18,10 +18,10 @@ class CreateAuctionDTO extends BaseDTO
         public readonly string $startTime,
         public readonly string $expiryTime,
         public readonly array $medias,
-        public readonly string $owner = currentUserId(),
-        public readonly string $status = AuctionStatusEnum::PENDING->value
-    )
-    {
-        
+        public ?string $owner = null,
+        public ?string $status = null,
+    ) {
+        $this->owner = $this->owner ?? currentUserId();
+        $this->status = $this->status ?? AuctionStatusEnum::PENDING->value;
     }
 }
