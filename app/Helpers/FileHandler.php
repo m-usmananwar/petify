@@ -34,4 +34,15 @@ class FileHandler
         
         return $url;
     }
+
+    public static function uploadMany(array $files, string $folder, string $disk = null): array
+    {
+        $paths = [];
+
+        foreach($files as $file){
+            $paths[] = self::uploadFile($file, $folder, null, $disk);
+        }
+
+        return $paths;
+    }
 }

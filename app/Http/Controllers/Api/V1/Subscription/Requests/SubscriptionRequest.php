@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Api\Subscription\Requests;
+namespace App\Http\Controllers\Api\V1\Subscription\Requests;
 
 use App\Http\Requests\BaseRequest;
 use App\Modules\Subscription\DTO\SubscriptionDTO;

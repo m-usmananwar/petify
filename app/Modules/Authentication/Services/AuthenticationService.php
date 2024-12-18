@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Modules\Authentication\Repositories\Interfaces\IVerificationRepository;
 use App\Modules\Authentication\Repositories\Interfaces\IAuthenticationRepository;
 
-class AuthenticationService
+final class AuthenticationService
 {
     use GenericExceptions;
 

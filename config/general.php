@@ -7,5 +7,6 @@ return [
 
     'filePaths' => [
         'profileImages' => 'users/@userId/profile-images',
+        'auctionMedias' => 'users/@userId/auction-medias',
     ],
 ];

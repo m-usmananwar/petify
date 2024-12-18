@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Authentication\Requests;
+namespace App\Http\Controllers\Api\V1\Authentication\Requests;
 
 use App\Http\Requests\BaseRequest;
 use App\Modules\Authentication\DTO\SignInDTO;

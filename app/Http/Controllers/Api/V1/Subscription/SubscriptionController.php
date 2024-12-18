@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api\Subscription;
+namespace App\Http\Controllers\Api\V1\Subscription;
 
 use Exception;
 use App\Http\Response\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Modules\Subscription\Services\SubscriptionService;
-use App\Http\Controllers\Api\Subscription\Requests\SubscriptionRequest;
+use App\Http\Controllers\Api\V1\Subscription\Requests\SubscriptionRequest;
 
 class SubscriptionController extends Controller
 {

@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Api\Authentication;
+namespace App\Http\Controllers\Api\V1\Authentication;
 
 use App\Http\Response\ApiResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Modules\Authentication\Services\AuthenticationService;
-use App\Http\Controllers\Api\Authentication\Requests\SignInRequest;
-use App\Http\Controllers\Api\Authentication\Requests\RegistrationRequest;
-use App\Http\Controllers\Api\Authentication\Requests\ForgotPasswordRequest;
-use App\Http\Controllers\Api\Authentication\Requests\EmailVerificationRequest;
-use App\Http\Controllers\Api\Authentication\Requests\PasswordVerificationRequest;
-use App\Http\Controllers\Api\Authentication\Requests\EmailVerificationUpdateRequest;
-use App\Http\Controllers\Api\Authentication\Requests\ResetPasswordRequest;
+use App\Http\Controllers\Api\V1\Authentication\Requests\SignInRequest;
+use App\Http\Controllers\Api\V1\Authentication\Requests\RegistrationRequest;
+use App\Http\Controllers\Api\V1\Authentication\Requests\ForgotPasswordRequest;
+use App\Http\Controllers\Api\V1\Authentication\Requests\EmailVerificationRequest;
+use App\Http\Controllers\Api\V1\Authentication\Requests\PasswordVerificationRequest;
+use App\Http\Controllers\Api\V1\Authentication\Requests\EmailVerificationUpdateRequest;
+use App\Http\Controllers\Api\V1\Authentication\Requests\ResetPasswordRequest;
 
 class AuthenticationController extends Controller
 {

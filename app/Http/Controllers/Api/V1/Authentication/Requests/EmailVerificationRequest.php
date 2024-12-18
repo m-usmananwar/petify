@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Api\Authentication\Requests;
+namespace App\Http\Controllers\Api\V1\Authentication\Requests;
 
 use App\Http\Requests\BaseRequest;
-use App\Modules\Authentication\DTO\PasswordVerificationDTO;
+use App\Modules\Authentication\DTO\EmailVerificationDTO;
 
-class PasswordVerificationRequest extends BaseRequest
+class EmailVerificationRequest extends BaseRequest
 {
     public function DTO():string
     {
-        return PasswordVerificationDTO::class;
+        return EmailVerificationDTO::class;
     }
 
     public function rules():array

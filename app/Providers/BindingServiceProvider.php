@@ -11,6 +11,7 @@ class BindingServiceProvider extends ServiceProvider
         \App\Modules\Authentication\Repositories\Interfaces\IVerificationRepository::class => \App\Modules\Authentication\Repositories\VerificationRepository::class,
         \App\Modules\Subscription\Repositories\Interfaces\ISubscriptionRepository::class => \App\Modules\Subscription\Repositories\SubscriptionRepository::class,
         \App\Modules\Subscription\Repositories\Interfaces\ISubscriptionPlanRepository::class => \App\Modules\Subscription\Repositories\SubscriptionPlanRepository::class,
+        \App\Modules\Auction\Repositories\Interfaces\IAuctionRepository::class => \App\Modules\Auction\Repositories\AuctionRepository::class
     ];
 
     public function register()
