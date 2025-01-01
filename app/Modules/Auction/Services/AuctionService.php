@@ -38,6 +38,13 @@ final class AuctionService
         });
     }
 
+    public function get(int $id): Auction
+    {
+        $relationsToLoad = ['medias', 'owner'];
+
+        return $this->repository->getWith($id, $relationsToLoad);
+    }
+
     private function uploadMedias(array $medias, Auction $auction): void
     {
         $folder = FileHandler::generateUserSpecificPath(currentUserId(), config('general.filePaths.auctionMedias'));

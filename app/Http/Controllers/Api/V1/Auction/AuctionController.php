@@ -28,9 +28,15 @@ class AuctionController extends Controller
         }
     }
 
-    public function show($id)
+    public function show($id): ApiResponse
     {
-        //
+        try {
+            $auction = $this->auctionService->get($id);
+
+            return ApiResponse::success($auction);
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
     }
 
     public function update(Request $request, $id)
