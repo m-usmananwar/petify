@@ -40,7 +40,11 @@ final class AuctionService
 
     public function get(int $id): Auction
     {
-        $relationsToLoad = ['medias', 'owner'];
+        $relationsToLoad = ['medias' => function ($q) {
+            $q->select('path');
+        }, 'owner' => function ($q) {
+            $q->select('first_name', 'last_name', 'username', 'contact_no', 'email', 'image');
+        }];
 
         return $this->repository->getWith($id, $relationsToLoad);
     }
