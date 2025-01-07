@@ -7,6 +7,7 @@ use App\Http\Response\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Modules\Auction\Services\AuctionService;
 use App\Http\Controllers\Api\V1\Auction\Requests\CreateAuctionRequest;
+use App\Http\Controllers\Api\V1\Auction\Requests\UpdateAuctionRequest;
 
 class AuctionController extends Controller
 {
@@ -39,9 +40,15 @@ class AuctionController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateAuctionRequest $request, $id): ApiResponse
     {
-        //
+        try {
+            $this->auctionService->update($request->toDto(), $id);
+
+            return ApiResponse::success(['message' => 'Auction udpated successfully']);
+        } catch(\Exception $exception) {
+            throw $exception;
+        }
     }
 
     public function destroy($id)
