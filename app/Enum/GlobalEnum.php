@@ -19,4 +19,8 @@ final class GlobalEnum
         'Mollusk',
         'Crustacean'
     ];
+
+    public static array $biddableTypes = [
+        'Auction',
+    ];
 }
