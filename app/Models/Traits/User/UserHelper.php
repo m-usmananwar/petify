@@ -8,14 +8,6 @@ use App\Models\Verification;
 
 trait UserHelper
 {
-    public function getProfileImageUrl(): ?string
-    {
-        if(empty($this->image)) {
-            return null;
-        }
-
-        return FileHandler::getFileUrl($this->image);
-    }
 
     public function isVerified(): bool
     {

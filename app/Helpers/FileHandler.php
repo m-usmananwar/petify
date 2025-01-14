@@ -25,14 +25,9 @@ class FileHandler
 
         $filePath = $uploadedFile->storeAs($folder, $fileName, $disk);
 
-        return $filePath;
-    }
-
-    public static function getFileUrl(string $filePath): string
-    {   
-        $url = Storage::url($filePath);
+        $filePath = self::getFileUrl($filePath);
         
-        return $url;
+        return $filePath;
     }
 
     public static function uploadMany(array $files, string $folder, string $disk = null): array
@@ -44,5 +39,12 @@ class FileHandler
         }
 
         return $paths;
+    }
+
+    private static function getFileUrl(string $filePath): string
+    {   
+        $url = Storage::url($filePath);
+        
+        return $url;
     }
 }

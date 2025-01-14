@@ -17,6 +17,4 @@ class Bid extends Model
         'bidder',
         'amount',
     ];
-
-    public static array $biddables = ['Auction'];
 }

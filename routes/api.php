@@ -35,4 +35,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     Route::apiResource('auction', \App\Http\Controllers\Api\V1\Auction\AuctionController::class);
+
+    Route::post('/place-bid', [\App\Http\Controllers\Api\V1\Bid\BidController::class, 'placeBidAction']);
 });
