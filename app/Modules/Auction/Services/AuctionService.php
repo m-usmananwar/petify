@@ -80,6 +80,11 @@ final class AuctionService
 
     }
 
+    public function delete($id): void
+    {
+        $this->repository->delete($id);
+    }
+
     private function uploadMedias(array $medias, Auction $auction): void
     {
         $folder = FileHandler::generateUserSpecificPath(currentUserId(), config('general.filePaths.auctionMedias'));

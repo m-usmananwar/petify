@@ -7,6 +7,7 @@ use App\Http\Response\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Modules\Auction\Services\AuctionService;
 use App\Http\Controllers\Api\V1\Auction\Requests\CreateAuctionRequest;
+use App\Http\Controllers\Api\V1\Auction\Requests\DeleteAuctionRequest;
 use App\Http\Controllers\Api\V1\Auction\Requests\UpdateAuctionRequest;
 
 class AuctionController extends Controller
@@ -51,8 +52,14 @@ class AuctionController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(DeleteAuctionRequest $request, $id)
     {
-        //
+        try {
+            $this->auctionService->delete($id);
+
+            return ApiResponse::success(['message' => 'Auction deleted successfully']);
+        } catch(\Exception $exception) {
+            throw $exception;
+        }
     }
 }
