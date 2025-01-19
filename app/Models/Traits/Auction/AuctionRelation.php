@@ -13,9 +13,4 @@ trait AuctionRelation
     {
         return $this->belongsTo(User::class, 'owner', 'id');
     }
-
-    public function bids(): MorphMany
-    {
-        return $this->morphMany(Bid::class, 'biddable');
-    }
 }
