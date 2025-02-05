@@ -25,7 +25,7 @@ class FileHandler
 
         $filePath = $uploadedFile->storeAs($folder, $fileName, $disk);
 
-        $filePath = self::getFileUrl($filePath);
+        $filePath = self::getFileUrl($filePath, $disk);
         
         return $filePath;
     }
@@ -41,9 +41,11 @@ class FileHandler
         return $paths;
     }
 
-    private static function getFileUrl(string $filePath): string
+    private static function getFileUrl(string $filePath, $disk = null): string
     {   
         $url = Storage::url($filePath);
+    
+        if($disk !== 's3') $url = url($url);
         
         return $url;
     }
