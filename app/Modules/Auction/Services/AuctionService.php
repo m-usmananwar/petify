@@ -18,6 +18,13 @@ final class AuctionService
         return $this->repository;
     }
 
+    public function index(array $filters)
+    {
+        $auctions = $this->repository->getPaginatedWith($filters);
+
+        return $auctions;
+    }
+
     public function store(CreateAuctionDTO $dto): Auction
     {
         return DB::transaction(function () use ($dto) {
@@ -77,7 +84,6 @@ final class AuctionService
 
             return $auction;
         });
-
     }
 
     public function delete($id): void
