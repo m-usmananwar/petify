@@ -34,7 +34,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('cancel', 'cancelSubscriptionAction');
     });
 
-    Route::apiResource('auction', \App\Http\Controllers\Api\V1\Auction\AuctionController::class)->except('index');
+    Route::apiResource('auctions', \App\Http\Controllers\Api\V1\Auction\AuctionController::class)->except('index');
 
     Route::post('/place-bid', [\App\Http\Controllers\Api\V1\Bid\BidController::class, 'placeBidAction']);
 });
@@ -45,5 +45,5 @@ $middleware = [];
 if (Request::header('Authorization')) $middleware = array_merge($middleware, ['auth:sanctum']);
 
 Route::middleware($middleware)->group(function () {
-    Route::get('auction', [\App\Http\Controllers\Api\V1\Auction\AuctionController::class, 'index']);
+    Route::get('auctions', [\App\Http\Controllers\Api\V1\Auction\AuctionController::class, 'index']);
 });

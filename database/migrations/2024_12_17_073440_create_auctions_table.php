@@ -26,7 +26,7 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->decimal('initial_price', 10, 2);
             $table->dateTime('start_time')->nullable();
-            $table->dateTime('expire_time')->nullable();
+            $table->dateTime('expiry_time')->nullable();
             $table->timestamps();
         });
     }

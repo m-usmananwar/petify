@@ -30,6 +30,6 @@ class Auction extends Model implements ICouldBiddable, ICouldMediaable
         'description',
         'initial_price',
         'start_time',
-        'expire_time',
+        'expiry_time',
     ];
 }
