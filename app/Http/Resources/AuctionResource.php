@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\UserResource;
 use App\Http\Resources\MediaResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,8 +27,9 @@ class AuctionResource extends JsonResource
             'initialPrice' => $this->initial_price,
             'startTime' => $this->start_time,
             'expiryTime' => $this->expiry_time,
-            'is_own' => currentUser() ? currentUserId() === $this->owner : false,
-            'medias' => MediaResource::collection($this->medias)
+            'is_own' => currentUser() ? currentUserId() === $this->owner_id : false,
+            'medias' => MediaResource::collection($this->medias),
+            'owner' => new UserResource($this->whenLoaded('owner')) ?? null
         ];
     }
 }

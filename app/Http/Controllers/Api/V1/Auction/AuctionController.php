@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\V1\Auction\Requests\CreateAuctionRequest;
 use App\Http\Controllers\Api\V1\Auction\Requests\DeleteAuctionRequest;
 use App\Http\Controllers\Api\V1\Auction\Requests\UpdateAuctionRequest;
 use App\Http\Resources\AuctionCollection;
+use App\Http\Resources\AuctionResource;
 use Illuminate\Http\JsonResponse;
 
 class AuctionController extends Controller
@@ -46,6 +47,8 @@ class AuctionController extends Controller
     {
         try {
             $auction = $this->auctionService->get($id);
+
+            if ($auction) $auction = new AuctionResource($auction);
 
             return ApiResponse::success($auction);
         } catch (\Exception $exception) {

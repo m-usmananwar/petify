@@ -25,7 +25,7 @@ class Auction extends Model implements ICouldBiddable, ICouldMediaable
         'age',
         'type',
         'status',
-        'owner',
+        'owner_id',
         'tag_line',
         'description',
         'initial_price',

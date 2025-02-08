@@ -61,7 +61,7 @@ class UpdateAuctionRequest extends BaseRequest
                     return;
                 }
 
-                if($auction->owner !== currentUserId()) {
+                if($auction->owner_id !== currentUserId()) {
                     $fail('You are not authorized to update this auction.');
                     return;
                 }

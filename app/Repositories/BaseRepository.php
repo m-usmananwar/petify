@@ -32,7 +32,7 @@ abstract class BaseRepository
         return $this->model::find($id);
     }
 
-    public function getWith(int $id, array $with = []): Model
+    public function getWith(int|string $id, array $with = []): Model
     {
         return $this->model::with($with)->find($id);
     }
