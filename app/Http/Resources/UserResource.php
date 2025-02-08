@@ -6,7 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
-    public function toArray($request) :array
+    public function toArray($request): array
     {
         return [
             'firstName' => $this->first_name,
@@ -16,6 +16,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'status' => $this->status,
             'imageUrl' => $this->image,
+            'fullName' => $this->first_name . " " . $this->last_name,
         ];
     }
 }

@@ -18,6 +18,13 @@ final class AuctionService
         return $this->repository;
     }
 
+    public function index(array $filters)
+    {
+        $auctions = $this->repository->getPaginatedWith($filters);
+
+        return $auctions;
+    }
+
     public function store(CreateAuctionDTO $dto): Auction
     {
         return DB::transaction(function () use ($dto) {
@@ -43,13 +50,9 @@ final class AuctionService
         });
     }
 
-    public function get(int $id): Auction
+    public function get(int|string $id): Auction
     {
-        $relationsToLoad = ['medias' => function ($q) {
-            $q->select('path');
-        }, 'owner' => function ($q) {
-            $q->select('first_name', 'last_name', 'username', 'contact_no', 'email', 'image');
-        }];
+        $relationsToLoad = ['owner'];
 
         return $this->repository->getWith($id, $relationsToLoad);
     }
@@ -66,7 +69,7 @@ final class AuctionService
             $data['initial_price'] = $dto->initialPrice;
             $data['start_time'] = $dto->startTime;
             $data['expiry_time'] = $dto->expiryTime;
-            $data['owner'] = $dto->owner;
+            $data['owner_id'] = $dto->owner_id;
             $data['status'] = $dto->status;
 
             $auction = $this->repository->update($data, $id);
@@ -77,7 +80,6 @@ final class AuctionService
 
             return $auction;
         });
-
     }
 
     public function delete($id): void

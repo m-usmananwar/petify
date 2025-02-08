@@ -19,10 +19,10 @@ class UpdateAuctionDTO extends BaseDTO
         public readonly string $startTime,
         public readonly string $expiryTime,
         public readonly array $medias = [],
-        public ?string $owner = null,
+        public ?string $owner_id = null,
         public ?string $status = null,
     ) {
-        $this->owner = $this->owner ?? currentUserId();
+        $this->owner_id = $this->owner_id ?? currentUserId();
         $this->status = $this->status ?? AuctionStatusEnum::PENDING->value;
     }
 }
