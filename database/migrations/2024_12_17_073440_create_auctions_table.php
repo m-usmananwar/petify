@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('color')->nullable();
             $table->string('age')->nullable();
             $table->string('type')->nullable();
-            $table->foreignId('owner')->constrained('users')->onDelete('cascade');
+            $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
             $table->string('status')->default(AuctionStatusEnum::PENDING->value);
             $table->string('tag_line')->nullable();
             $table->longText('description')->nullable();

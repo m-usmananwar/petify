@@ -15,6 +15,6 @@ trait BidRelation
 
     public function bidder(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'bidder', 'id');
+        return $this->belongsTo(User::class, 'bidder_id', 'id');
     }
 }

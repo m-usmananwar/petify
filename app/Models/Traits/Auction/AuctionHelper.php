@@ -13,6 +13,6 @@ trait AuctionHelper
 
     public function isExpired(): bool
     {
-        return $this->expiry_time < new DateTime();
+        return now()->isAfter($this->expiry_time);
     }
 }

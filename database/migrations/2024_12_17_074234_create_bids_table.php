@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('bids', function (Blueprint $table) {
             $table->id();
             $table->morphs('biddable');
-            $table->foreignId('bidder')->constrained('users')->onDelete('cascade');
+            $table->foreignId('bidder_id')->constrained('users')->onDelete('cascade');
             $table->decimal('amount', 10, 2);
             $table->timestamps();
         });
