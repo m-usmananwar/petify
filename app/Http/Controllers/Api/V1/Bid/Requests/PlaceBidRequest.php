@@ -46,6 +46,7 @@ class PlaceBidRequest extends BaseRequest
 
                 if(!$biddableModel) {
                     $fail("The particular {$biddable} does not exist.");
+                    return;
                 }
 
                 if($biddableModel->status === AuctionStatusEnum::BLOCKED_BY_ADMIN->value) {

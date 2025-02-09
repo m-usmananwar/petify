@@ -13,37 +13,45 @@ use Illuminate\Support\Facades\Request;
 |
 */
 
-Route::middleware(['guest'])->group(function () {
-    Route::controller(\App\Http\Controllers\Api\V1\Authentication\AuthenticationController::class)->group(function () {
-        Route::post('/signin', 'signInAction');
-        Route::post('/register', 'registerAction');
-        Route::post('/verify-email', 'emailVerificationAction');
-        Route::post('/resend-verification-email', 'resendEmailVerificationAction');
-        Route::post('/forgot-password', 'forgotPasswordAction');
-        Route::post('/verify-forgot-password', 'verifyForgotPasswordAction');
+Route::middleware(['cors'])->group(function () {
+
+    Route::middleware(['guest'])->group(function () {
+        Route::controller(\App\Http\Controllers\Api\V1\Authentication\AuthenticationController::class)->group(function () {
+            Route::post('/signin', 'signInAction');
+            Route::post('/register', 'registerAction');
+            Route::post('/verify-email', 'emailVerificationAction');
+            Route::post('/resend-verification-email', 'resendEmailVerificationAction');
+            Route::post('/forgot-password', 'forgotPasswordAction');
+            Route::post('/verify-forgot-password', 'verifyForgotPasswordAction');
+        });
     });
-});
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post('/reset-password', [\App\Http\Controllers\Api\V1\Authentication\AuthenticationController::class, 'resetPasswordAction']);
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::post('/authenticate-pusher', [\App\Http\Controllers\Api\V1\Pusher\PusherController::class, 'authenticate']);
 
-    Route::controller(\App\Http\Controllers\Api\V1\Subscription\SubscriptionController::class)->prefix('subscription/')->group(function () {
-        Route::post('buy', 'buySubscriptionAction');
-        Route::post('change-plan', 'changeSubscriptionPlanAction');
-        Route::post('change-plan-and-payment-method', 'changeSubscriptionPlanAndPaymentMethodAction');
-        Route::post('resume', 'resumeSubscriptionAction');
-        Route::post('cancel', 'cancelSubscriptionAction');
+        Route::post('/reset-password', [\App\Http\Controllers\Api\V1\Authentication\AuthenticationController::class, 'resetPasswordAction']);
+
+        Route::controller(\App\Http\Controllers\Api\V1\Subscription\SubscriptionController::class)->prefix('subscription/')->group(function () {
+            Route::post('buy', 'buySubscriptionAction');
+            Route::post('change-plan', 'changeSubscriptionPlanAction');
+            Route::post('change-plan-and-payment-method', 'changeSubscriptionPlanAndPaymentMethodAction');
+            Route::post('resume', 'resumeSubscriptionAction');
+            Route::post('cancel', 'cancelSubscriptionAction');
+        });
+
+        Route::apiResource('auctions', \App\Http\Controllers\Api\V1\Auction\AuctionController::class)->except('index');
+
+        Route::controller(\App\Http\Controllers\Api\V1\Bid\BidController::class)->prefix('bids')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Api\V1\Bid\BidController::class, 'index']);
+            Route::post('/', [\App\Http\Controllers\Api\V1\Bid\BidController::class, 'store']);
+        });
     });
 
-    Route::apiResource('auctions', \App\Http\Controllers\Api\V1\Auction\AuctionController::class)->except('index');
 
-    Route::post('/place-bid', [\App\Http\Controllers\Api\V1\Bid\BidController::class, 'placeBidAction']);
-});
+    $middleware = [];
 
+    if (Request::header('Authorization')) $middleware = array_merge($middleware, ['auth:sanctum']);
 
-$middleware = [];
-
-if (Request::header('Authorization')) $middleware = array_merge($middleware, ['auth:sanctum']);
-
-Route::middleware($middleware)->group(function () {
-    Route::get('auctions', [\App\Http\Controllers\Api\V1\Auction\AuctionController::class, 'index']);
+    Route::middleware($middleware)->group(function () {
+        Route::get('auctions', [\App\Http\Controllers\Api\V1\Auction\AuctionController::class, 'index']);
+    });
 });

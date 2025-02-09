@@ -14,7 +14,7 @@ class Bid extends Model
     protected $fillable = [
         'biddable_id',
         'biddable_type',
-        'bidder',
+        'bidder_id',
         'amount',
     ];
 }
