@@ -7,8 +7,8 @@ use App\DTO\BaseDTO;
 class PlaceBidDTO extends BaseDTO
 {
     public function __construct(
-        public string $biddleableType,
-        public int $biddleableId,
+        public string $biddableType,
+        public int $biddableId,
         public float $amount
     ) {}
 }
