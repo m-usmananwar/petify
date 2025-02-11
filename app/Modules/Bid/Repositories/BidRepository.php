@@ -17,7 +17,7 @@ class BidRepository extends BaseRepository implements IBidRepository
 
     public function getAllBids(string $biddableType, int|string $biddableId): Collection
     {
-        $bids = $this->model::select('id', 'amount', 'bidder_id')
+        $bids = $this->model::select('id', 'amount', 'bidder_id', 'created_at')
             ->with(['bidder' => function ($q) {
                 $q->select('id', 'first_name', 'last_name', 'image');
             }])
