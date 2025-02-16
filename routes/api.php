@@ -39,11 +39,7 @@ Route::middleware(['cors'])->group(function () {
         });
 
         Route::apiResource('auctions', \App\Http\Controllers\Api\V1\Auction\AuctionController::class)->except('index');
-
-        Route::controller(\App\Http\Controllers\Api\V1\Bid\BidController::class)->prefix('bids')->group(function () {
-            Route::get('/', [\App\Http\Controllers\Api\V1\Bid\BidController::class, 'index']);
-            Route::post('/', [\App\Http\Controllers\Api\V1\Bid\BidController::class, 'store']);
-        });
+        Route::apiResource('bids', \App\Http\Controllers\Api\V1\Bid\BidController::class)->only(['index', 'store']);
     });
 
 

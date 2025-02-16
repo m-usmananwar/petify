@@ -15,14 +15,14 @@ final class BidService
 
     public function placeBid(PlaceBidDTO $dto): Bid
     {
-        $data['biddable_type'] = $dto->biddleableType;
-        $data['biddable_id'] = $dto->biddleableId;
+        $data['biddable_type'] = $dto->biddableType;
+        $data['biddable_id'] = $dto->biddableId;
         $data['amount'] = $dto->amount;
         $data['bidder_id'] = currentUserId();
 
         $bid = $this->bidRepository->save($data);
 
-        $this->dispatchBidChannelEvent($dto->biddleableType, $dto->biddleableId);
+        $this->dispatchBidChannelEvent($dto->biddableType, $dto->biddableId);
 
         return $bid;
     }
