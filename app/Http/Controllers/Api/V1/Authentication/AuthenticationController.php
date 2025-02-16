@@ -17,23 +17,26 @@ use App\Http\Controllers\Api\V1\Authentication\Requests\ResetPasswordRequest;
 
 class AuthenticationController extends Controller
 {
-    public function __construct(private readonly AuthenticationService $service)
-    {
-        
-    }
-    
+    public function __construct(private readonly AuthenticationService $service) {}
+
     public function signInAction(SignInRequest $request): ApiResponse
     {
         $user = $this->service->signIn($request->toDto());
         $userResource = new UserResource($user);
 
-        return ApiResponse::success(array_merge($userResource->toArray($request), [
+        $response = array_merge($userResource->toArray($request), [
             'token' => $user->createToken('authToken')->plainTextToken,
-        ]));
+        ]);
+
+        return ApiResponse::success([
+            'message' => 'User authenticated succesfully',
+            'data' => $response
+        ]);
     }
 
     public function registerAction(RegistrationRequest $request): ApiResponse
-    {   try{
+    {
+        try {
             DB::beginTransaction();
             $verificationId = $this->service->register($request->toDto());
             DB::commit();
@@ -51,10 +54,15 @@ class AuthenticationController extends Controller
         $user = $this->service->verifyEmail($request->toDto());
 
         $userResource = new UserResource($user);
-        
-        return ApiResponse::success(array_merge($userResource->toArray($request), [
-            "token" => $user->createToken('authToken')->plainTextToken
-        ]));
+
+        $response = array_merge($userResource->toArray($request), [
+            'token' => $user->createToken('authToken')->plainTextToken,
+        ]);
+
+        return ApiResponse::success([
+            'message' => 'User verified succesfully',
+            'data' => $response
+        ]);
     }
 
     public function resendEmailVerificationAction(EmailVerificationUpdateRequest $request): ApiResponse
