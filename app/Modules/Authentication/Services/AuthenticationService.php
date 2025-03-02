@@ -72,6 +72,8 @@ final class AuthenticationService
         
         $verificationId = $user->resetEmailVerification();
 
+        $user->wallet()->create();
+
         \App\Modules\Authentication\Events\WelcomeEvent::dispatch($user, $user->getVerificationCode());
 
         return $verificationId;
