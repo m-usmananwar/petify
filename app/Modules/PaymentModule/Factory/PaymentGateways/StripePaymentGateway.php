@@ -5,6 +5,7 @@ namespace App\Modules\PaymentModule\Factory\PaymentGateways;
 use App\Models\Subscription as ModelsSubscription;
 use Laravel\Cashier\Subscription;
 use App\Modules\PaymentModule\Factory\PaymentGateways\IPaymentGateway;
+use App\Modules\PaymentModule\Helpers\StripeHelper;
 use App\Modules\Subscription\Repositories\Interfaces\ISubscriptionPlanRepository;
 use Exception;
 
@@ -95,7 +96,7 @@ final class StripePaymentGateway implements IPaymentGateway
         $user->createOrGetStripeCustomer();
         $user->addPaymentMethod($paymentMethodId);
         $user->updateDefaultPaymentMethod($paymentMethodId);
-        
+
         if (!$user->subscribed($this->subscriptionName)) {
             throw new \Exception("It looks like you’re not currently subscribed to any plan");
         }
@@ -144,5 +145,10 @@ final class StripePaymentGateway implements IPaymentGateway
         }
 
         return $user->subscription($this->subscriptionName)->resume();
+    }
+
+    public function buyCoins(int $amount, string $paymentMethodId): void
+    {
+        StripeHelper::checkout($amount, $paymentMethodId);
     }
 }
