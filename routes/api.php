@@ -40,6 +40,7 @@ Route::middleware(['cors'])->group(function () {
 
         Route::apiResource('auctions', \App\Http\Controllers\Api\V1\Auction\AuctionController::class)->except('index');
         Route::apiResource('bids', \App\Http\Controllers\Api\V1\Bid\BidController::class)->only(['index', 'store']);
+        Route::apiResource('wallet-transactions', \App\Http\Controllers\Api\V1\WalletTransaction\WalletTransactionController::class)->only(['index']);
     });
 
 
